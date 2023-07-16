@@ -11,7 +11,7 @@
                         <h5 class="card-title">{{ character.name }}</h5>
                         <p class="card-text">{{ character.species }}</p>
                         <p class="card-text">{{ character.gender }}</p>
-                        <a href="#" class="btn btn-primary">Más Info</a>
+                        <a href="{{ path('getRickAndMorty', {'id':character.id})}}" class="btn btn-primary">Más Info</a>
                     </div>
                 </div>
             </div>

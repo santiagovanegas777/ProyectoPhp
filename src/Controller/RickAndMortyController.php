@@ -12,19 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RickAndMortyController extends AbstractController{
 
-    #[Route("/rickandmorty")]
+    #[Route("/rickandmorty/{id}", name:"getRickAndMorty")]
 
-    public function getRickAndMorty() {
+    public function getRickAndMorty(EntityManagerInterface $doctrine, $id) {
 
-        $character =[
-            "name"=>"Rick",
-            "species"=>"Alien",
-            "image"=>"https://rickandmortyapi.com/api/character/avatar/14.jpeg",
-            "gender"=>"Male",
+        $repository = $doctrine->getRepository(Character::class);
+        $character = $repository->find($id);
 
-
-
-        ];
+       
 
         return $this->render("Characters/characters.html.twig",["character"=>$character]);
     }
