@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-
+use App\Entity\Episode;
 use App\Entity\Character;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,9 +56,30 @@ class RickAndMortyController extends AbstractController{
         $character3->setGender("Male");
 
 
+        $episode1 = new Episode();
+        $episode1->setEpisode( episode:"https://rickandmortyapi.com/api/episode/13");
+        $episode2 = new Episode();
+        $episode2->setEpisode( episode:"https://rickandmortyapi.com/api/episode/19");
+
+        $episode3 = new Episode();
+        $episode3->setEpisode( episode:"https://rickandmortyapi.com/api/episode/14");
+
+        $episode4 = new Episode();
+        $episode4->setEpisode( episode:"https://rickandmortyapi.com/api/episode/16");
+
+
+        $character3->addEpisode($episode1);
+        $character3->addEpisode($episode2);
+        $character1->addEpisode($episode3);
+
+
         $doctrineS->persist($character1);
         $doctrineS->persist($character2);
         $doctrineS->persist($character3);
+        $doctrineS->persist($episode1);
+        $doctrineS->persist($episode2);
+        $doctrineS->persist($episode3);
+        $doctrineS->persist($episode4);
 
         $doctrineS->flush();
         return new Response("characters insertados correctamente");
