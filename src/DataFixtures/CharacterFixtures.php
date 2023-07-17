@@ -8,69 +8,39 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CharacterFixtures extends Fixture
-// {
-
-//     protected $httpClient;
-
-//     public function __construct(HttpClientInterface $httpClient) 
-//     {
-//      $this->httpClient = $httpClient;
-//     }
-//     public function load(ObjectManager $manager): void
-//     {
-//         // $product = new Product();
-//         // $manager->persist($product);
-
-//         for ($i=0; $i<100; $i++){
-
-       
-
-//         $randId = rand(100, 999);
-
-//         $response = $this->httpClient->request("GET", "https://rickandmortyapi.com/api/character/$randId");
-
-//         $content = json_decode($response->getContent(), associative:true);
-
-//         $character = new Character();
-//         $character->setName($content['name']);
-//         $character->setImage(image:"https://rickandmortyapi.com/api/character/avatar/$randId.jpeg");
-        
-
-//         $manager->persist($character);
-
-//         $manager->flush();
-//      }
-//     }
-// }
-
-
 {
+
     protected $httpClient;
 
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(HttpClientInterface $httpClient) 
     {
-        $this->httpClient = $httpClient;
+     $this->httpClient = $httpClient;
     }
-
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
         // $manager->persist($product);
-        for ($i=0; $i<100; $i++) {
 
-            $randId = rand(100, 999);
-            $response = $this->httpClient->request("GET", "https://pokeapi.co/api/v2/pokemon/$randId");
+        for ($i=0; $i<100; $i++){
 
-            $content = json_decode($response->getContent(), true);
+       
 
-            $character = new Character();
-            $character->setName($content['name']);
-            $character->setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/full/$randId.png");
-          
+        $randId = rand(1, 140);
 
-            $manager->persist($character);
+        $response = $this->httpClient->request("GET", "https://rickandmortyapi.com/api/character/$randId");
 
-            $manager->flush();
-        }
+        $content = json_decode($response->getContent(), associative:true);
+
+        $character = new Character();
+        $character->setName($content['name']);
+        $character->setImage(image:"https://rickandmortyapi.com/api/character/avatar/$randId.jpeg");
+        
+
+        $manager->persist($character);
+
+        $manager->flush();
+     }
     }
 }
+
+
