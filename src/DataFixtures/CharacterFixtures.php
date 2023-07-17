@@ -34,6 +34,7 @@ class CharacterFixtures extends Fixture
         $character = new Character();
         $character->setName($content['name']);
         $character->setImage(image:"https://rickandmortyapi.com/api/character/avatar/$randId.jpeg");
+        $character->setSpecies($content['species']);
         
 
         $manager->persist($character);
