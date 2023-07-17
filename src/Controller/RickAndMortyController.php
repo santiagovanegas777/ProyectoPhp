@@ -4,10 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Episode;
 use App\Entity\Character;
+use App\Form\CharacterType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
-
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RickAndMortyController extends AbstractController{
@@ -23,7 +24,7 @@ class RickAndMortyController extends AbstractController{
 
         return $this->render("Characters/characters.html.twig",["character"=>$character]);
     }
-    #[Route("/rickandmortylist")]
+    #[Route("/rickandmortylist", name:'listCharacters')]
     public function listCharacters(EntityManagerInterface $doctrineS){
         $repository = $doctrineS->getRepository(Character::class);
         $characters = $repository->findAll();
@@ -33,6 +34,26 @@ class RickAndMortyController extends AbstractController{
         return $this->render("Characters/listcharacters.html.twig",["characters"=>$characters]);
 
     }
+    #[Route("/insert/character", name:"insertCharacter")]
+
+    public function insertCharacter(EntityManagerInterface $doctrine, Request $request) {
+
+       $form=$this-> createForm(CharacterType::class);
+       $form->handleRequest($request);
+
+       if($form->isSubmitted()and $form->isValid()){
+        $character=$form->getData();
+        $doctrine->persist($character);
+        $doctrine->flush();
+        return $this->redirectToRoute('listCharacters');
+
+
+       }
+
+       return $this->render('Characters/insertCharacter.html.twig', ['characterForm'=>$form]);
+    }
+
+    
 
     #[Route("new/character")]
     public function newCharacter(EntityManagerInterface $doctrineS)
