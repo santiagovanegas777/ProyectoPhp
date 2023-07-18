@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Episode;
 use App\Entity\Character;
 use App\Form\CharacterType;
+use App\Manager\CharacterManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +38,7 @@ class RickAndMortyController extends AbstractController{
     
     #[Route("/insert/character", name:"insertCharacter")]
 
-    public function insertCharacter(EntityManagerInterface $doctrine, Request $request) {
+    public function insertCharacter(EntityManagerInterface $doctrine, Request $request, CharacterManager $manager) {
 
        $form=$this-> createForm(CharacterType::class);
        $form->handleRequest($request);
@@ -47,10 +48,11 @@ class RickAndMortyController extends AbstractController{
         $characterImage = $form->get('characterImage')->getData();
         
             if($characterImage){
-                $newFilename = uniqid().'.'.$characterImage->guessExtension();
-                $characterImage->move($this->getParameter('kernel.project_dir').'/public/images', $newFilename);
 
-                $character->setImage("/images/$newFilename");
+                $imageUrl = $manager->uploadImage($characterImage , $this->getParameter('kernel.project_dir').'/public/images');
+               
+
+                $character->setImage("$imageUrl");
     
             }
         $doctrine->persist($character);
