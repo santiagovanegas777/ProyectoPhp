@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class RickAndMortyController extends AbstractController{
 
@@ -68,6 +69,7 @@ class RickAndMortyController extends AbstractController{
 
     
     #[Route("edit/character/{id}", name:"editCharacter")]
+    #[IsGranted("ROLE_ADMIN")]
 
     public function editCharacter(EntityManagerInterface $doctrine, Request $request, $id) {
 
