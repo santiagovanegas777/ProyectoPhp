@@ -73,18 +73,18 @@ class RickAndMortyController extends AbstractController{
         $repository = $doctrine->getRepository(Character::class);
         $character =$repository->find($id);
 
-       $form=$this-> createForm(CharacterType::class,$character);
+       $form=$this->createForm(CharacterType::class, $character);
        $form->handleRequest($request);
        
-        $characterImage = $form->get('characterImage')->getData();
+        if($form->isSubmitted() and $form->isValid()){
+            $character = $form->getData();
+            $doctrine->persist($character);
+            $doctrine->flush();
+            return $this->redirectToRoute('listCharacters');
 
-        $doctrine->persist($character);
-        $doctrine->flush();
-        return $this->redirectToRoute('listCharacters');
+        }
 
-
-       
-
+     
        return $this->render('Characters/insertCharacter.html.twig', ['characterForm'=>$form]);
     }
 
