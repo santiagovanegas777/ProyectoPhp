@@ -12,6 +12,7 @@
                         <p class="card-text">{{ character.species }}</p>
                         <p class="card-text">{{ character.gender }}</p>
                         <a href="{{ path('getRickAndMorty', {'id':character.id})}}" class="btn btn-primary">Más Info</a>
+                         <a href="{{ path('editCharacter', {'id':character.id})}}" class="btn btn-primary">Editar</a>
                     </div>
                 </div>
             </div>

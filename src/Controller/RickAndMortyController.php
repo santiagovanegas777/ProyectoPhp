@@ -34,6 +34,7 @@ class RickAndMortyController extends AbstractController{
         return $this->render("Characters/listcharacters.html.twig",["characters"=>$characters]);
 
     }
+    
     #[Route("/insert/character", name:"insertCharacter")]
 
     public function insertCharacter(EntityManagerInterface $doctrine, Request $request) {
@@ -43,6 +44,15 @@ class RickAndMortyController extends AbstractController{
 
        if($form->isSubmitted()and $form->isValid()){
         $character=$form->getData();
+        $characterImage = $form->get('characterImage')->getData();
+        
+            if($characterImage){
+                $newFilename = uniqid().'.'.$characterImage->guessExtension();
+                $characterImage->move($this->getParameter('kernel.project_dir').'/public/images', $newFilename);
+
+                $character->setImage("/images/$newFilename");
+    
+            }
         $doctrine->persist($character);
         $doctrine->flush();
         return $this->redirectToRoute('listCharacters');
@@ -51,13 +61,38 @@ class RickAndMortyController extends AbstractController{
        }
 
        return $this->render('Characters/insertCharacter.html.twig', ['characterForm'=>$form]);
+    
+} 
+
+    
+    #[Route("edit/character/{id}", name:"editCharacter")]
+
+    public function editCharacter(EntityManagerInterface $doctrine, Request $request, $id) {
+
+
+        $repository = $doctrine->getRepository(Character::class);
+        $character =$repository->find($id);
+
+       $form=$this-> createForm(CharacterType::class,$character);
+       $form->handleRequest($request);
+       
+        $characterImage = $form->get('characterImage')->getData();
+
+        $doctrine->persist($character);
+        $doctrine->flush();
+        return $this->redirectToRoute('listCharacters');
+
+
+       
+
+       return $this->render('Characters/insertCharacter.html.twig', ['characterForm'=>$form]);
     }
 
     
 
+
     #[Route("new/character")]
-    public function newCharacter(EntityManagerInterface $doctrineS)
-    {
+    public function newCharacter(EntityManagerInterface $doctrineS) {
         $character1 =  new Character ();
         $character1->setName("Rick");
         $character1->setSpecies("Alien");
@@ -111,5 +146,4 @@ class RickAndMortyController extends AbstractController{
 
         // return new Response("Estoy en la home")
     }
-
 }
